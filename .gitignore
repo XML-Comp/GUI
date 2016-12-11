@@ -25,5 +25,6 @@ _testmain.go
 
 # Custom
 node_modules/
-components/
+assets/bootstrap
+assets/jquery
 

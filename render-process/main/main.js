@@ -1,6 +1,6 @@
-let remote = require('electron').remote
-let gui = remote.require('./main.js')
-let $ = require(`../../components/jquery/dist/jquery.min.js`)
+const { ipcRenderer, remote } = require('electron')
+const path = require('path')
+const $ = require(`../../assets/jquery/dist/jquery.min.js`)
 
 let agreeCheckbox = $('#agreeCheckbox')
 
@@ -12,18 +12,22 @@ let changeButtonState = (elem) => {
 
 changeButtonState(agreeCheckbox)
 
+ipcRenderer.on('getFolderReply', (e, folder, inputId) => {
+    $(inputId).val(folder)
+})
+
 agreeCheckbox.on('change', function() {
     changeButtonState(this)
 })
 
 $('#licenseLink').on('click', () => {
-    gui.createLicenseWindow()
+    ipcRenderer.send('showLicense', remote.getCurrentWindow())
 })
 
 $('#gameFolderBrowse').on('click', () => {
-    $('#gamesFolderPath').val(gui.getFolder())
+    ipcRenderer.send('getFolder', 'Game Language Folder', '#gamesFolderPath')
 })
 
 $('#localFolderBrowse').on('click', () => {
-    $('#localFolderPath').val(gui.getFolder())
+    ipcRenderer.send('getFolder', 'Local Language Folder', '#localFolderPath')
 })

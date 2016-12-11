@@ -1,92 +1,83 @@
 const electron = require('electron')
-const fs = require('fs')
-const {app, BrowserWindow, dialog} = electron
+const glob = require('glob')
 const path = require('path')
-let isDev = process.env.DEVELOP ? process.env.DEVELOP.trim() == "true" : false
 
-//Globaly scope so the app can see it
-let mainWindow;
+const {app, BrowserWindow} = electron
 
-let createMainWindow = () => {
-    let mainWin = new BrowserWindow({
-        title: "XML Comparer",
-        width: 800,
-        height: 600,
-        minWidth: 800,
-        minHeight: 600,
-        show: false
-    })
-    mainWin.loadURL(`file://${__dirname}/windows/index/index.html`)
-    mainWin.on('closed', () => {
-        mainWin = null
-    })
-    mainWin.once('ready-to-show', () => {
-        mainWin.show()
-    })
-    if(isDev){
-        mainWin.webContents.openDevTools({mode:"undocked"})
+app.debug = /--debug/.test(process.argv[2])
+
+let mainWindow = null
+
+function initialize (){
+    loadDemos()
+
+    function createWindow() {
+        let windowOptions = {
+            title: app.getName(),
+            width: 800,
+            height: 600,
+            minWidth: 800,
+            minHeight: 600
+        }
+
+        if (process.platform === 'linux') {
+            windowOptions.icon = path.join(__dirname, '/assets/app-icon/512.png')
+        }
+
+        mainWindow = new BrowserWindow(windowOptions)
+        mainWindow.loadURL(path.join('file://', __dirname, '/sections/main/main.html'))
+
+        if (app.debug){
+            mainWindow.webContents.openDevTools({mode:"undocked"})
+            require('devtron').install()
+        }
+
+        mainWindow.on('closed', () => {
+            mainWindow = null
+        })
     }
-    return mainWin
-}
 
-let createLicenseWindow = () => {
-    let licenseWin = new BrowserWindow({
-        title: "XML Comparer - License & Guidlines",
-        width: 400,
-        height: 600,
-        minWidth: 400,
-        minHeight: 600,
-        show: false,
-        parent: mainWindow,
-        modal: true
+    app.on('ready', () => {
+        createWindow()
     })
-    licenseWin.loadURL(`file://${__dirname}/windows/license/index.html`)
-    licenseWin.on('closed', () => {
-        licenseWin = null
-    })
-    licenseWin.once('ready-to-show', () => {
-        licenseWin.show()
-    })
-    licenseWin.setMenu(null)
-    if(isDev){
-        licenseWin.webContents.openDevTools({mode:"undocked"})
-    }
-    return licenseWin
-}
 
-let readLicense = () => {
-    return fs.readFileSync(`${__dirname}/LICENSE`, "UTF-8")
-}
+    app.on('window-all-closed', () => {
+        if (process.platform !== 'darwin') {
+            app.quit()
+        }
+    })
 
-let getFolder = (title) =>{
-    return dialog.showOpenDialog({
-        title: title,
-        defaultPath: app.getPath('home'),
-        properties: ['openDirectory']
+    app.on('activate', () => {
+        if (mainWindow === null){
+            createWindow()
+        }
     })
 }
 
-app.on('ready', () => {
-    mainWindow = createMainWindow()
-})
+// Make this app a single instance app.
+//
+// The main window will be restored and focused instead of a second window
+// opened when a person attempts to launch a second instance.
+//
+// Returns true if the current version of the app should quit instead of
+// launching.
+function makeSingleInstance () {
+  if (process.mas) return false
 
-// Quit when all windows are closed.
-app.on('window-all-closed', function () {
-    // On OS X it is common for applications and their menu bar
-    // to stay active until the user quits explicitly with Cmd + Q
-    if (process.platform !== 'darwin') {
-        app.quit()
+  return app.makeSingleInstance(function () {
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore()
+      mainWindow.focus()
     }
-})
+  })
+}
 
-app.on('activate', function () {
-    // On OS X it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (mainWindow === null) {
-       mainWindow = createMainWindow()
-    }
-})
+// Require each JS file in the main-process dir
+function loadDemos () {
+  var files = glob.sync(path.join(__dirname, 'main-process/**/*.js'))
+  files.forEach(function (file) {
+    require(file)
+  })
+}
 
-exports.createLicenseWindow =  createLicenseWindow
-exports.readLicense = readLicense
-exports.getFolder = getFolder
+initialize()
