@@ -1,0 +1,27 @@
+{
+  "name": "xml-comp",
+  "description": "XML Comparer",
+  "main": "gui.js",
+  "authors": [
+    "Arthur Silva <arxdsilva@gmail.com>",
+    "Will Dixon <dixonwille@hotmail.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "XML",
+    "Compare"
+  ],
+  "homepage": "https://github.com/ArxdSilva/XML-Comp",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.1.1",
+    "bootstrap": "^3.3.7"
+  }
+}

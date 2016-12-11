@@ -1,0 +1,7 @@
+.hidden{
+    display: none !important;
+    visibility: hidden;
+}
+body{
+    padding-bottom: 10px;
+}
