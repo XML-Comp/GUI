@@ -1,24 +1,30 @@
-# GUI
+# gui
 
-This is the repo of XML-Comp's GUI, please refer your Issues on [XML-Comp's Issues board](https://github.com/XML-Comp/XML-Comp/issues)
+> GUI for XML-Comp
 
-## Prerequisites for Developmen
+## Build Setup
 
-* Node Package Manager
-* Wine 1.6 greater (Mac/Linux only) for packaging
+``` bash
+# windows only
+npm install --global windows-build-tools
 
-## Initialize
+# install dependencies
+npm install
 
-* `npm install`
+# serve with hot reload at localhost:9080
+npm run dev
 
-## Run
+# build electron app for production
+npm run build
 
-* `npm start` to see what the final product looks like
-* `npm run dev` opens a developers tool useful for debugging
+# lint all JS/Vue component files in `app/src`
+npm run lint
 
-## Packaging
+# run webpack in production
+npm run pack
+```
+More information can be found [here](https://simulatedgreg.gitbooks.io/electron-vue/content/docs/npm_scripts.html).
 
-We use `gulp` to distribute our packages. This is a work in progress.
+---
 
-* `gulp` will package all the possable packages for the GUI
-* `gulp clean` will remove the packages
+This project was generated from [electron-vue](https://github.com/SimulatedGREG/electron-vue) using [vue-cli](https://github.com/vuejs/vue-cli). Documentation about this project can be found [here](https://simulatedgreg.gitbooks.io/electron-vue/content/index.html).
