@@ -1,6 +1,8 @@
-# gui
-
 > GUI for XML-Comp
+
+# Issues
+
+> Please refer your issues to [XML-Comp](https://github.com/XML-Comp/XML-Comp/issues) issues page
 
 ## Build Setup
 
