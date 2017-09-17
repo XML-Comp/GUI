@@ -7,22 +7,10 @@
 ## Build Setup
 
 ``` bash
-# windows only
-npm install --global windows-build-tools
-
-# install dependencies
+# install locally the dependencies
 npm install
 
-# serve with hot reload at localhost:9080
-npm run dev
-
-# build electron app for production
-npm run build
-
-# lint all JS/Vue component files in `app/src`
-npm run lint
-
-# run webpack in production
-npm run pack
+# start app 
+npm start
 ```
 More information can be found [here](https://simulatedgreg.gitbooks.io/electron-vue/content/docs/npm_scripts.html).
